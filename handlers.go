@@ -14,10 +14,7 @@ type User struct {
 	Name string `json:"name"`
 }
 
-var users = map[int]User{
-	1: {ID: 1, Name: "Alice"},
-	2: {ID: 2, Name: "Bob"},
-}
+var users = make(map[int]User)
 
 func GetUsers(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(users)

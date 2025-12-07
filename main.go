@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/http"
 
@@ -20,7 +21,18 @@ func main() {
 	if err != nil {
 		log.Fatalf("MinIO init failed: %v", err)
 	}
-	log.Println("MinIO connected")
+
+	bucket := "users"
+
+	err = minioClient.MakeBucket(context.Background(), bucket, minio.MakeBucketOptions{})
+	if err != nil {
+		exists, errB := minioClient.BucketExists(context.Background(), bucket)
+		if errB != nil || !exists {
+			log.Fatalf("Cannot create bucket %s: %v", bucket, err)
+		}
+	}
+
+	log.Println("MinIO connected, bucket ready:", bucket)
 
 	// Создание роутера
 	r := mux.NewRouter()
